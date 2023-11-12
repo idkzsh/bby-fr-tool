@@ -11,7 +11,7 @@ class BBYTranslator:
         pass
 
     # translate the whole sku
-    def translate_sku(row, column_name_fr, column_name, chars):
+    def translate_sku(self, row, column_name_fr, column_name, chars):
         abbreviations = {
             "blk": "black",
             "clr": "clear",
@@ -57,7 +57,7 @@ class BBYTranslator:
                     print(desc_fr)
                     modified = False
 
-                    desc_fr, modified = remove_chars(desc_fr)
+                    desc_fr, modified = self.remove_chars(desc_fr)
 
                     if not modified:
                         break
@@ -68,7 +68,7 @@ class BBYTranslator:
             return desc_fr
 
     # translate word by word
-    def translate_word(row, column_name_fr, column_name, chars):
+    def translate_word(self, row, column_name_fr, column_name, chars):
         abbreviations = {
             "blk": "black",
             "clr": "clear",
@@ -121,7 +121,7 @@ class BBYTranslator:
                     print(desc_fr)
                     modified = False
 
-                    desc_fr, modified = remove_chars(desc_fr)
+                    desc_fr, modified = self.remove_chars(desc_fr)
 
                     if not modified:
                         break
