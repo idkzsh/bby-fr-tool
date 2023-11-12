@@ -46,20 +46,22 @@ class TranslatorApp:
 
         radiobutton_1 = tkb.Radiobutton(
             label_frame,
-            text="SKU",
+            text="Entire SKU",
             command=self.radiobutton_event(),
             variable=self.radio_var,
             value=1,
+            bootstyle="primary-outline-toolbutton"
         )
         radiobutton_2 = tkb.Radiobutton(
             label_frame,
-            text="Word",
+            text="Word by Word",
             command=self.radiobutton_event(),
             variable=self.radio_var,
             value=2,
+            bootstyle="secondary-outline-toolbutton"
         )
         radiobutton_1.place(relx=0.05, rely=0.18)
-        radiobutton_2.place(relx=0.4, rely=0.18)
+        radiobutton_2.place(relx=0.45, rely=0.18)
 
         cols = (
             ["SKU"],
