@@ -62,6 +62,12 @@ class TranslatorApp:
         )
         radiobutton_1.place(relx=0.05, rely=0.18)
         radiobutton_2.place(relx=0.45, rely=0.18)
+        
+        run = tkb.Button(label_frame, text="Run")
+        run.place(relx=0.05, rely=0.24, relwidth=0.9)
+
+        progress = tkb.Progressbar(label_frame)
+        progress.place(relx=0.05, rely=0.3, relwidth=0.9)
 
         cols = (
             ["SKU"],
