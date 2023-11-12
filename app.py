@@ -9,13 +9,9 @@ from ttkbootstrap.constants import *
 
 def main():
     root = tkb.Window(themename="darkly")
-
     t1 = TranslatorApp()
     t1.create_layout(root)
     root.mainloop()
-
-    translator = pd.BBYTranslator()
-
 
 class TranslatorApp:
     def __init__(self):
@@ -43,7 +39,7 @@ class TranslatorApp:
         browse_button = tkb.Button(
             label_frame,
             text="Browse",
-            command=lambda: self.browse_file(),
+            command=self.browse_file,
             bootstyle="LIGHT",
         )
         browse_button.place(relx=0.5, rely=0.11, relwidth=0.44)
@@ -51,7 +47,7 @@ class TranslatorApp:
         radiobutton_1 = tkb.Radiobutton(
             label_frame,
             text="Entire SKU",
-            command=self.radiobutton_event(),
+            command=self.radiobutton_event,
             variable=self.radio_var,
             value=1,
             bootstyle="info-outline-toolbutton",
@@ -59,7 +55,7 @@ class TranslatorApp:
         radiobutton_2 = tkb.Radiobutton(
             label_frame,
             text="Word by Word",
-            command=self.radiobutton_event(),
+            command=self.radiobutton_event,
             variable=self.radio_var,
             value=2,
             bootstyle="secondary-outline-toolbutton",
@@ -67,7 +63,7 @@ class TranslatorApp:
         radiobutton_1.place(relx=0.05, rely=0.18)
         radiobutton_2.place(relx=0.45, rely=0.18)
 
-        run = tkb.Button(label_frame, text="Run")
+        run = tkb.Button(label_frame, text="Run", command=self.run)
         run.place(relx=0.05, rely=0.24, relwidth=0.9)
 
         progress = tkb.Progressbar(label_frame)
@@ -75,20 +71,13 @@ class TranslatorApp:
 
         cols = ('SKU', 'DESCRIPTION', 'TRANSLATION')
 
-        table = tkb.Treeview(frame, bootstyle="SECONDARY", columns=cols, show="headings")
-        table.heading("SKU", text="SKU")
-        table.column("SKU", width=20, anchor=CENTER)
-        table.heading("DESCRIPTION", text="DESCRIPTION")
-        table.heading("TRANSLATION", text="TRANSLATION")
-        table.place(relx=0.215, rely=0.01, relwidth=0.78, relheight=0.98)
+        self.table = tkb.Treeview(frame, bootstyle="SECONDARY", columns=cols, show="headings")
+        self.table.heading("SKU", text="SKU")
+        self.table.column("SKU", width=20, anchor=CENTER)
+        self.table.heading("DESCRIPTION", text="DESCRIPTION")
+        self.table.heading("TRANSLATION", text="TRANSLATION")
+        self.table.place(relx=0.215, rely=0.01, relwidth=0.78, relheight=0.98)
 
-        contacts = []
-
-        for n in range(1, 20):
-            contacts.append((f"First {n}", f"LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG{n}", f"email{n}@address.com"))
-
-        for contact in contacts:
-            table.insert("", END, values=contact)
 
 
     def browse_file(self):
@@ -98,8 +87,20 @@ class TranslatorApp:
             print("Selected file:", file_path)
 
     def radiobutton_event(self):
-        pass
+        print(self.radio_var.get())
 
+    def run(self):
+        translator = pd.BBYTranslator(callback_function=self.update_treeview)
+
+        if self.filename_var:
+            translator.read_file(self.filename_var.get(), self.radio_var.get())
+        
+    def update_treeview(self, data_to_print):
+        sku, description, translation = data_to_print
+        self.table.insert('', tkb.END, values=(sku, description, translation))
+        self.table.yview_moveto(1.0)
+        self.table.update_idletasks()
+        print("Updating Treeview:", data_to_print)
 
 if __name__ == "__main__":
     main()
