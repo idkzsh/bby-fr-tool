@@ -90,24 +90,6 @@ class TranslatorApp:
         for contact in contacts:
             table.insert("", END, values=contact)
 
-        # columns = ('first_name', 'last_name', 'email')
-
-        # tree = ttk.Treeview(root, columns=columns, show='headings')
-
-        # # define headings
-        # tree.heading('first_name', text='First Name')
-        # tree.heading('last_name', text='Last Name')
-        # tree.heading('email', text='Email')
-        # tree.place(relx=0.215, rely=0.01, relwidth=0.78, relheight=0.98)
-
-        # # generate sample data
-        # contacts = []
-        # for n in range(1, 100):
-        #     contacts.append((f'first {n}', f'last {n}', f'email{n}@example.com'))
-
-        # # add data to the treeview
-        # for contact in contacts:
-        #     tree.insert('', tk.END, values=contact)
 
     def browse_file(self):
         file_path = filedialog.askopenfilename()
