@@ -6,9 +6,9 @@ import pd
 import ttkbootstrap as tkb
 from ttkbootstrap.constants import *
 
-
 def main():
     root = tkb.Window(themename="darkly")
+    root.iconbitmap(r'bby.ico')
     t1 = TranslatorApp()
     t1.create_layout(root)
     root.mainloop()
