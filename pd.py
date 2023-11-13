@@ -44,11 +44,16 @@ def main():
 
 
 class BBYTranslator:
-    def __init__(self, callback_function):
+    def __init__(self, callback_function, row_callback):
         self.callback_function = callback_function
+        self.callback_row = row_callback
+        self.total_rows = 0
+        self.count = 0
 
     def read_file(self, input_file, mode):
         df = pd.read_excel(input_file)
+        self.total_rows = len(df)
+        
 
         if mode == 1:
             df["SKU_DESC FRENCH"] = df.apply(
@@ -138,7 +143,9 @@ class BBYTranslator:
             tree_result = [row["SKU"], desc, desc_fr]
 
             # # desc_fr = re.sub(r'\s+', ' ', desc_fr).strip()
+            self.count +=1
             self.callback_function(tree_result)
+            self.callback_row(self.count, self.total_rows)
             return desc_fr
 
     # translate word by word
@@ -200,8 +207,9 @@ class BBYTranslator:
 
             desc_fr = brand + desc_fr
             tree_result = [row["SKU"], desc, desc_fr]
+            self.count +=1
             self.callback_function(tree_result)
-
+            self.callback_row(self.count, self.total_rows)
             return desc_fr
 
     def remove_chars(self,desc):

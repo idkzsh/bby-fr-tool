@@ -17,6 +17,7 @@ class TranslatorApp:
     def __init__(self):
         self.filename_var = ctk.StringVar()
         self.radio_var = tk.IntVar(value=0)
+        self.total_rows = 0
 
     def create_layout(self, root):
         root.title("Translation Tool")
@@ -69,8 +70,8 @@ class TranslatorApp:
         run = tkb.Button(label_frame, text="Run", command=self.run)
         run.place(relx=0.05, rely=0.24, relwidth=0.9)
 
-        progress = tkb.Progressbar(label_frame)
-        progress.place(relx=0.05, rely=0.3, relwidth=0.9)
+        self.progress = tkb.Progressbar(label_frame, mode='determinate', bootstyle="INFO")
+        self.progress.place(relx=0.05, rely=0.3, relwidth=0.9)
 
         cols = ('SKU', 'DESCRIPTION', 'TRANSLATION')
 
@@ -89,31 +90,31 @@ class TranslatorApp:
             self.filename_var.set(file_path)
             print("Selected file:", file_path)
 
-    def radiobutton_event(self):
-        print(self.radio_var.get())
-
     def run(self):
         if self.radio_var.get() == 0:
             mb = tkb.dialogs.Messagebox.ok("Please choose a translation mode")
             return
         else:
-            translator = pd.BBYTranslator(callback_function=self.update_treeview)
+            translator = pd.BBYTranslator(callback_function=self.update_treeview, row_callback=self.update_total_rows)
+            
             try: 
+
                 translator.read_file(self.filename_var.get(), self.radio_var.get())
+
             except:
                 mb = tkb.dialogs.Messagebox.ok("Please choose a file")
 
-        
-        
-
-            
-        
     def update_treeview(self, data_to_print):
         sku, description, translation = data_to_print
         self.table.insert('', tkb.END, values=(sku, description, translation))
         self.table.yview_moveto(1.0)
         self.table.update_idletasks()
-        print("Updating Treeview:", data_to_print)
+
+    def update_total_rows(self, row, total_rows):
+        percentage_completion = ((row + 1) / total_rows * 100) / 2
+        self.progress['value'] = percentage_completion
+        self.progress.update_idletasks()
+
 
 if __name__ == "__main__":
     main()
