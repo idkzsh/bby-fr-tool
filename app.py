@@ -28,6 +28,7 @@ class TranslatorApp:
         self.filename_var = ctk.StringVar()
         self.radio_var = tk.IntVar(value=0)
         self.total_rows = 0
+        self.completion = 0
         self.create_layout()
         self.root.mainloop()
 
@@ -50,15 +51,18 @@ class TranslatorApp:
         frame = ctk.CTkFrame(self.root)
         frame.place(x=0, y=0, relwidth=1, relheight=1)
 
-        label_frame = tkb.Frame(frame)
-        label_frame.place(relx=0.006, rely=0.01, relwidth=0.2, relheight=0.98)
+        dark_frame = tkb.Frame(frame)
+        dark_frame.place(relx=0.006, rely=0.01, relwidth=0.215, relheight=0.98)
 
-        label = tkb.Label(master=label_frame, text="File", bootstyle="DEFAULT")
+        label_frame = tkb.Labelframe(dark_frame, text="SKU Translation")
+        label_frame.place(relx=0.03, rely=0.01, relheight=0.5, relwidth=0.94)
+
+        label = tkb.Label(master=label_frame, text="Input File", bootstyle="DEFAULT")
         label.place(relx=0.055, rely=0.01)
 
         # StringVar to store the filename
         filename = tkb.Entry(label_frame, textvariable=self.filename_var)
-        filename.place(relx=0.05, rely=0.05, relwidth=0.9)
+        filename.place(relx=0.05, rely=0.1, relwidth=0.9)
 
         browse_button = tkb.Button(
             label_frame,
@@ -66,7 +70,7 @@ class TranslatorApp:
             command=self.browse_file,
             bootstyle="LIGHT",
         )
-        browse_button.place(relx=0.5, rely=0.11, relwidth=0.44)
+        browse_button.place(relx=0.5, rely=0.25, relwidth=0.44)
 
         radiobutton_1 = tkb.Radiobutton(
             label_frame,
@@ -82,16 +86,25 @@ class TranslatorApp:
             value=2,
             bootstyle="secondary-outline-toolbutton",
         )
-        radiobutton_1.place(relx=0.05, rely=0.18)
-        radiobutton_2.place(relx=0.45, rely=0.18)
+        radiobutton_1.place(relx=0.05, rely=0.4)
+        radiobutton_2.place(relx=0.45, rely=0.4)
 
         run = tkb.Button(label_frame, text="Run", command=self.run)
-        run.place(relx=0.05, rely=0.24, relwidth=0.9)
+        run.place(relx=0.05, rely=0.55, relwidth=0.9)
 
         self.progress = tkb.Progressbar(
             label_frame, mode="determinate", bootstyle="INFO"
         )
-        self.progress.place(relx=0.05, rely=0.3, relwidth=0.9)
+        self.progress.place(relx=0.05, rely=0.7, relwidth=0.9)
+
+        self.completion_label = tkb.Label(label_frame, text=f'Completed: {self.completion}%')
+        self.completion_label.place(relx=0.05, rely=0.76)
+
+        self.file_saved_label = tkb.Label(label_frame, text="File location:")
+        self.file_saved_label.place(relx=0.05, rely=0.87)
+
+        self.file_saved_entry = tkb.Entry(label_frame, state="readonly")
+        self.file_saved_entry.place(relx=0.45, rely=0.85, relwidth=0.5)
 
         cols = ("SKU", "DESCRIPTION", "TRANSLATION")
 
@@ -102,7 +115,7 @@ class TranslatorApp:
         self.table.column("SKU", width=20, anchor=CENTER)
         self.table.heading("DESCRIPTION", text="DESCRIPTION")
         self.table.heading("TRANSLATION", text="TRANSLATION")
-        self.table.place(relx=0.215, rely=0.01, relwidth=0.78, relheight=0.98)
+        self.table.place(relx=0.225, rely=0.01, relwidth=0.768, relheight=0.98)
 
     def browse_file(self):
         """
@@ -129,8 +142,9 @@ class TranslatorApp:
             )
 
             try:
-                translator.read_file(self.filename_var.get(), self.radio_var.get())
-
+                self.directory = translator.read_file(self.filename_var.get(), self.radio_var.get())
+                self.file_saved_entry.configure(state="normal")
+                self.file_saved_entry.insert(0,f'{self.directory}')
             except:
                 mb = tkb.dialogs.Messagebox.ok("Please choose a file")
 
@@ -154,6 +168,9 @@ class TranslatorApp:
         """
         percentage_completion = ((row + 1) / total_rows * 100) / 2
         self.progress["value"] = percentage_completion
+        if percentage_completion > 100:
+            percentage_completion = 100
+        self.completion_label["text"] = f'Completed: {percentage_completion:.0f}%'
         self.progress.update_idletasks()
 
 

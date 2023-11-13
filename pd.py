@@ -26,7 +26,7 @@ class BBYTranslator:
         self.count = 0
 
     def read_file(self, input_file, mode):
-        """Read file method inserts the data from the excel file into the dataframe, 
+        """Read file method inserts the data from the excel file into the dataframe,
         then one of two translation methods depending on which translator mode was selected in the TranslatorApp Class
 
         Args:
@@ -72,8 +72,8 @@ class BBYTranslator:
             )
 
         df.to_excel(output_file, index=False)
+        return output_file
 
-    
     def translate_sku(self, row, column_name_fr, column_name, chars):
         """Translate SKU method takes the entire SKU and translates it together to help the translator understand context of words
 
@@ -81,7 +81,7 @@ class BBYTranslator:
             row (int): the current row index of the dataframe
             column_name_fr (str): The name of the column that the translation will be output to
             column_name (str): the name of the column that the method will be translating
-            chars (int): if it exceeds, the character limit that the translation will be shortened to 
+            chars (int): if it exceeds, the character limit that the translation will be shortened to
 
         Returns:
             str: the translation
@@ -137,15 +137,24 @@ class BBYTranslator:
 
             tree_result = [row["SKU"], desc, desc_fr]
 
-            # # desc_fr = re.sub(r'\s+', ' ', desc_fr).strip()
             self.count += 1
             self.callback_function(tree_result)
             self.callback_row(self.count, self.total_rows)
-            print(type(desc_fr))
             return desc_fr
 
-    # translate word by word
     def translate_word(self, row, column_name_fr, column_name, chars):
+        """Translate word method takes the entire SKU and translates it word by word, 
+        this is better at translating each word but can lose the context and also the translation is usually too long
+
+        Args:
+            row (int): the current row index of the dataframe
+            column_name_fr (str): The name of the column that the translation will be output to
+            column_name (str): the name of the column that the method will be translating
+            chars (int): if it exceeds, the character limit that the translation will be shortened to
+
+        Returns:
+            str: the translation
+        """
         abbreviations = {
             "blk": "black",
             "clr": "clear",
@@ -208,7 +217,14 @@ class BBYTranslator:
             return desc_fr
 
     def remove_chars(self, desc):
-        # Define the set of vowels to remove
+        """Remove chars method removes vowels and spaces from the translation. It goes from right to left.
+
+        Args:
+            desc (str): The translation to be shortened
+
+        Returns:
+            str: the shortened description
+        """
         chars_to_remove = "AEIOUÀÂÉÈÊËÎÏÔÛÙÜ "
 
         modified = False
