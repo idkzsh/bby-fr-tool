@@ -53,8 +53,12 @@ class BBYTranslator:
     def read_file(self, input_file, mode):
         df = pd.read_excel(input_file)
         self.total_rows = len(df)
+        file_path_index = input_file.rfind("/")
+        directory_path = input_file[:file_path_index]
+        print(directory_path)
         
-
+        output_file = directory_path + r"\translated_data.xlsx"
+        
         if mode == 1:
             df["SKU_DESC FRENCH"] = df.apply(
                 self.translate_sku,
@@ -86,7 +90,6 @@ class BBYTranslator:
                 axis=1,
             )
 
-        output_file = "translated_data.xlsx"
         df.to_excel(output_file, index=False)
 
     # translate the whole sku

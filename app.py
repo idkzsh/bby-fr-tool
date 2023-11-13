@@ -5,26 +5,44 @@ import customtkinter as ctk
 import pd
 import ttkbootstrap as tkb
 from ttkbootstrap.constants import *
+import sys
+
 
 def main():
-    root = tkb.Window(themename="darkly")
-    root.iconbitmap(r'bby.ico')
     t1 = TranslatorApp()
-    t1.create_layout(root)
-    root.mainloop()
+    
+    
+
+
+
+
 
 class TranslatorApp:
     def __init__(self):
+        self.root = tkb.Window(themename="darkly")
         self.filename_var = ctk.StringVar()
         self.radio_var = tk.IntVar(value=0)
         self.total_rows = 0
+        
 
-    def create_layout(self, root):
-        root.title("Translation Tool")
-        root.geometry("1000x600")
-        root.resizable(False, False)
+        self.root.bind("<Escape>", self.quit)
 
-        frame = ctk.CTkFrame(root)
+        self.root.iconbitmap(r"bby.ico")
+        self.root.iconbitmap(default=r"bby.ico")
+        self.create_layout()
+        
+        self.root.mainloop()
+
+    def quit(self, event):
+        print("Exiting program.")
+        sys.exit()
+
+    def create_layout(self):
+        self.root.title("Translation Tool")
+        self.root.geometry("1000x600")
+        self.root.resizable(False, False)
+
+        frame = ctk.CTkFrame(self.root)
         frame.place(x=0, y=0, relwidth=1, relheight=1)
 
         label_frame = tkb.Frame(frame)
@@ -68,19 +86,21 @@ class TranslatorApp:
         run = tkb.Button(label_frame, text="Run", command=self.run)
         run.place(relx=0.05, rely=0.24, relwidth=0.9)
 
-        self.progress = tkb.Progressbar(label_frame, mode='determinate', bootstyle="INFO")
+        self.progress = tkb.Progressbar(
+            label_frame, mode="determinate", bootstyle="INFO"
+        )
         self.progress.place(relx=0.05, rely=0.3, relwidth=0.9)
 
-        cols = ('SKU', 'DESCRIPTION', 'TRANSLATION')
+        cols = ("SKU", "DESCRIPTION", "TRANSLATION")
 
-        self.table = tkb.Treeview(frame, bootstyle="SECONDARY", columns=cols, show="headings")
+        self.table = tkb.Treeview(
+            frame, bootstyle="SECONDARY", columns=cols, show="headings"
+        )
         self.table.heading("SKU", text="SKU")
         self.table.column("SKU", width=20, anchor=CENTER)
         self.table.heading("DESCRIPTION", text="DESCRIPTION")
         self.table.heading("TRANSLATION", text="TRANSLATION")
         self.table.place(relx=0.215, rely=0.01, relwidth=0.78, relheight=0.98)
-
-
 
     def browse_file(self):
         file_path = filedialog.askopenfilename()
@@ -93,10 +113,12 @@ class TranslatorApp:
             mb = tkb.dialogs.Messagebox.ok("Please choose a translation mode")
             return
         else:
-            translator = pd.BBYTranslator(callback_function=self.update_treeview, row_callback=self.update_total_rows)
-            
-            try: 
+            translator = pd.BBYTranslator(
+                callback_function=self.update_treeview,
+                row_callback=self.update_total_rows,
+            )
 
+            try:
                 translator.read_file(self.filename_var.get(), self.radio_var.get())
 
             except:
@@ -104,13 +126,13 @@ class TranslatorApp:
 
     def update_treeview(self, data_to_print):
         sku, description, translation = data_to_print
-        self.table.insert('', tkb.END, values=(sku, description, translation))
+        self.table.insert("", tkb.END, values=(sku, description, translation))
         self.table.yview_moveto(1.0)
         self.table.update_idletasks()
 
     def update_total_rows(self, row, total_rows):
         percentage_completion = ((row + 1) / total_rows * 100) / 2
-        self.progress['value'] = percentage_completion
+        self.progress["value"] = percentage_completion
         self.progress.update_idletasks()
 
 
