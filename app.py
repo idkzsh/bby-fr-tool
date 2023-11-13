@@ -48,7 +48,6 @@ class TranslatorApp:
         radiobutton_1 = tkb.Radiobutton(
             label_frame,
             text="Entire SKU",
-            command=self.radiobutton_event,
             variable=self.radio_var,
             value=1,
             bootstyle="secondary-outline-toolbutton",
@@ -56,7 +55,6 @@ class TranslatorApp:
         radiobutton_2 = tkb.Radiobutton(
             label_frame,
             text="Word by Word",
-            command=self.radiobutton_event,
             variable=self.radio_var,
             value=2,
             bootstyle="secondary-outline-toolbutton",
