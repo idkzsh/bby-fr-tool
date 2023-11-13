@@ -106,6 +106,12 @@ class TranslatorApp:
         self.file_saved_entry = tkb.Entry(label_frame, state="readonly")
         self.file_saved_entry.place(relx=0.45, rely=0.85, relwidth=0.5)
 
+        shortener_label_frame = tkb.Labelframe(dark_frame, text="Description shortener")
+        shortener_label_frame.place(relx=0.03, rely=0.52, relheight=0.23, relwidth=0.94)
+
+        word_translator_frame = tkb.Labelframe(dark_frame, text="Description shortener")
+        word_translator_frame.place(relx=0.03, rely=0.76, relheight=0.23, relwidth=0.94)
+
         cols = ("SKU", "DESCRIPTION", "TRANSLATION")
 
         self.table = tkb.Treeview(
@@ -142,9 +148,10 @@ class TranslatorApp:
             )
 
             try:
-                self.directory = translator.read_file(self.filename_var.get(), self.radio_var.get())
+                directory = translator.read_file(self.filename_var.get(), self.radio_var.get())
                 self.file_saved_entry.configure(state="normal")
-                self.file_saved_entry.insert(0,f'{self.directory}')
+                self.file_saved_entry.delete(0, tk.END)
+                self.file_saved_entry.insert(0,f'{directory}')
             except:
                 mb = tkb.dialogs.Messagebox.ok("Please choose a file")
 
