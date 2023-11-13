@@ -23,8 +23,8 @@ class TranslatorApp:
         """
         self.root = tkb.Window(themename="darkly")
         self.root.bind("<Escape>", self.quit)
-        self.root.iconbitmap(r"bby-fr-tool/bby.ico")
-        self.root.iconbitmap(default=r"bby-fr-tool/bby.ico")
+        self.root.iconbitmap(r"bby.ico")
+        self.root.iconbitmap(default=r"bby.ico")
         self.filename_var = ctk.StringVar()
         self.radio_var = tk.IntVar(value=0)
         self.total_rows = 0

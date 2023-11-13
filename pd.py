@@ -5,19 +5,39 @@ import re
 
 # _ = ts.preaccelerate_and_speedtest()
 class BBYTranslator:
+    """
+    BBYTranslator Class takes an input excel file, translates the data into a dataframe
+    and using the translators library, translates the data either in it's entirety or word by word.
+
+    It also removes vowels and spaces from any titles that exceed the character limits
+    """
+
     def __init__(self, callback_function, row_callback):
+        """Initializer method for BBYTranslator Class
+
+        Args:
+            callback_function (function): callback function to the update_treeview function in the TranslatorApp Class
+            row_callback (function): callback function to the update_total_rows function in the TranslatorApp Class
+            [These may be deleted and reworked as I want to minimize coupling]
+        """
         self.callback_function = callback_function
         self.callback_row = row_callback
         self.total_rows = 0
         self.count = 0
 
     def read_file(self, input_file, mode):
+        """Read file method inserts the data from the excel file into the dataframe, 
+        then one of two translation methods depending on which translator mode was selected in the TranslatorApp Class
+
+        Args:
+            input_file (str): The file path for the input excel file
+            mode (int): the translation mode, if 1, translate by entire SKU. if 2, translate word by word.
+        """
+
         df = pd.read_excel(input_file)
         self.total_rows = len(df)
         file_path_index = input_file.rfind("/")
         directory_path = input_file[:file_path_index]
-        print(directory_path)
-
         output_file = directory_path + r"\translated_data.xlsx"
 
         if mode == 1:
@@ -53,8 +73,19 @@ class BBYTranslator:
 
         df.to_excel(output_file, index=False)
 
-    # translate the whole sku
+    
     def translate_sku(self, row, column_name_fr, column_name, chars):
+        """Translate SKU method takes the entire SKU and translates it together to help the translator understand context of words
+
+        Args:
+            row (int): the current row index of the dataframe
+            column_name_fr (str): The name of the column that the translation will be output to
+            column_name (str): the name of the column that the method will be translating
+            chars (int): if it exceeds, the character limit that the translation will be shortened to 
+
+        Returns:
+            str: the translation
+        """
         abbreviations = {
             "blk": "black",
             "clr": "clear",
@@ -110,6 +141,7 @@ class BBYTranslator:
             self.count += 1
             self.callback_function(tree_result)
             self.callback_row(self.count, self.total_rows)
+            print(type(desc_fr))
             return desc_fr
 
     # translate word by word
