@@ -60,7 +60,6 @@ class TranslatorApp:
         label = tkb.Label(master=label_frame, text="Input File", bootstyle="DEFAULT")
         label.place(relx=0.055, rely=0.01)
 
-        # StringVar to store the filename
         filename = tkb.Entry(label_frame, textvariable=self.filename_var)
         filename.place(relx=0.05, rely=0.1, relwidth=0.9)
 
@@ -109,7 +108,30 @@ class TranslatorApp:
         shortener_label_frame = tkb.Labelframe(dark_frame, text="Description shortener")
         shortener_label_frame.place(relx=0.03, rely=0.52, relheight=0.23, relwidth=0.94)
 
-        word_translator_frame = tkb.Labelframe(dark_frame, text="Description shortener")
+        short_label = tkb.Label(master=shortener_label_frame, text="Input File", bootstyle="DEFAULT")
+        short_label.place(relx=0.055, rely=0.01)
+
+        short_filename = tkb.Entry(shortener_label_frame)
+        short_filename.place(relx=0.05, rely=0.2, relwidth=0.9)
+
+        short_char_label = tkb.Label(master=shortener_label_frame, text="Character Limit", bootstyle="DEFAULT")
+        short_char_label.place(relx=0.055, rely=0.5)
+
+        self.char_limit = tkb.IntVar()
+        short_scale = tkb.Scale(shortener_label_frame, from_=0, to=255, variable=self.char_limit)
+        short_scale.place(relx=0.5, rely=0.525, relwidth=0.44)
+
+        self.short_char_entry = tkb.Entry(shortener_label_frame)
+        self.short_char_entry.place(relx=0.05, rely=0.7, relwidth=0.2)
+
+        self.short_char_entry.insert(0, str(self.char_limit.get()))
+
+        self.char_limit.trace_add("write", self.update_entry)
+
+        shorten = tkb.Button(shortener_label_frame, text="Shorten")
+        shorten.place(relx=0.3, rely=0.7, relwidth=0.64)
+
+        word_translator_frame = tkb.Labelframe(dark_frame, text="Translate a word")
         word_translator_frame.place(relx=0.03, rely=0.76, relheight=0.23, relwidth=0.94)
 
         cols = ("SKU", "DESCRIPTION", "TRANSLATION")
@@ -122,6 +144,10 @@ class TranslatorApp:
         self.table.heading("DESCRIPTION", text="DESCRIPTION")
         self.table.heading("TRANSLATION", text="TRANSLATION")
         self.table.place(relx=0.225, rely=0.01, relwidth=0.768, relheight=0.98)
+
+    def update_entry(self, *args):
+        self.short_char_entry.delete(0, tk.END)  # Clear the entry
+        self.short_char_entry.insert(0, str(self.char_limit.get()))
 
     def browse_file(self):
         """
