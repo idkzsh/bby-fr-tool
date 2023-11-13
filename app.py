@@ -50,7 +50,7 @@ class TranslatorApp:
             command=self.radiobutton_event,
             variable=self.radio_var,
             value=1,
-            bootstyle="info-outline-toolbutton",
+            bootstyle="secondary-outline-toolbutton",
         )
         radiobutton_2 = tkb.Radiobutton(
             label_frame,
@@ -62,6 +62,9 @@ class TranslatorApp:
         )
         radiobutton_1.place(relx=0.05, rely=0.18)
         radiobutton_2.place(relx=0.45, rely=0.18)
+        print(self.radio_var.get())
+        # checkbutton = tkb.Checkbutton(label_frame, bootstyle="round-toggle")
+        # checkbutton.place(relx=.5, rely=0.18)
 
         run = tkb.Button(label_frame, text="Run", command=self.run)
         run.place(relx=0.05, rely=0.24, relwidth=0.9)
@@ -90,10 +93,20 @@ class TranslatorApp:
         print(self.radio_var.get())
 
     def run(self):
-        translator = pd.BBYTranslator(callback_function=self.update_treeview)
+        if self.radio_var.get() == 0:
+            mb = tkb.dialogs.Messagebox.ok("Please choose a translation mode")
+            return
+        else:
+            translator = pd.BBYTranslator(callback_function=self.update_treeview)
+            try: 
+                translator.read_file(self.filename_var.get(), self.radio_var.get())
+            except:
+                mb = tkb.dialogs.Messagebox.ok("Please choose a file")
 
-        if self.filename_var:
-            translator.read_file(self.filename_var.get(), self.radio_var.get())
+        
+        
+
+            
         
     def update_treeview(self, data_to_print):
         sku, description, translation = data_to_print
