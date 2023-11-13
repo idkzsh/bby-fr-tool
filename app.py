@@ -1,43 +1,48 @@
-import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
 import customtkinter as ctk
 import pd
-import ttkbootstrap as tkb
-from ttkbootstrap.constants import *
 import sys
+import tkinter as tk
+import ttkbootstrap as tkb
+from tkinter import ttk
+from tkinter import filedialog
+from ttkbootstrap.constants import *
 
 
 def main():
     t1 = TranslatorApp()
-    
-    
-
-
-
 
 
 class TranslatorApp:
+    """
+    TranslatorApp Class - TKinter interface
+    """
+
     def __init__(self):
+        """
+        Initializer method for TranslatorApp Class
+        """
         self.root = tkb.Window(themename="darkly")
+        self.root.bind("<Escape>", self.quit)
+        self.root.iconbitmap(r"bby-fr-tool/bby.ico")
+        self.root.iconbitmap(default=r"bby-fr-tool/bby.ico")
         self.filename_var = ctk.StringVar()
         self.radio_var = tk.IntVar(value=0)
         self.total_rows = 0
-        
-
-        self.root.bind("<Escape>", self.quit)
-
-        self.root.iconbitmap(r"bby.ico")
-        self.root.iconbitmap(default=r"bby.ico")
         self.create_layout()
-        
         self.root.mainloop()
 
     def quit(self, event):
-        print("Exiting program.")
+        """Quit method terminates the program
+
+        Args:
+            event (tkinter.Event): When Escape Key is pressed
+        """
         sys.exit()
 
     def create_layout(self):
+        """
+        Method to create the layout for the TKinter interface
+        """
         self.root.title("Translation Tool")
         self.root.geometry("1000x600")
         self.root.resizable(False, False)
@@ -79,9 +84,6 @@ class TranslatorApp:
         )
         radiobutton_1.place(relx=0.05, rely=0.18)
         radiobutton_2.place(relx=0.45, rely=0.18)
-        print(self.radio_var.get())
-        # checkbutton = tkb.Checkbutton(label_frame, bootstyle="round-toggle")
-        # checkbutton.place(relx=.5, rely=0.18)
 
         run = tkb.Button(label_frame, text="Run", command=self.run)
         run.place(relx=0.05, rely=0.24, relwidth=0.9)
@@ -103,12 +105,20 @@ class TranslatorApp:
         self.table.place(relx=0.215, rely=0.01, relwidth=0.78, relheight=0.98)
 
     def browse_file(self):
+        """
+        Browse file method is triggered when the browse button is pressed and updates the class variable filename_var
+        """
         file_path = filedialog.askopenfilename()
         if file_path:
             self.filename_var.set(file_path)
             print("Selected file:", file_path)
 
     def run(self):
+        """
+        Run method is triggered when the run button is pressed.
+
+        Contains some error handling if the translation mode is not selected and if there is no file selected
+        """
         if self.radio_var.get() == 0:
             mb = tkb.dialogs.Messagebox.ok("Please choose a translation mode")
             return
@@ -125,12 +135,23 @@ class TranslatorApp:
                 mb = tkb.dialogs.Messagebox.ok("Please choose a file")
 
     def update_treeview(self, data_to_print):
+        """Callback method for the BBYTranslator Class to update the treeview after each iteration
+
+        Args:
+            data_to_print (list): List of values to enter into the treeview
+        """
         sku, description, translation = data_to_print
         self.table.insert("", tkb.END, values=(sku, description, translation))
         self.table.yview_moveto(1.0)
         self.table.update_idletasks()
 
     def update_total_rows(self, row, total_rows):
+        """Callback method for the BBYTranslator Class to update the progress bar after each iteration
+
+        Args:
+            row (integer): the current row
+            total_rows (integer): the total number of rows in the excel file
+        """
         percentage_completion = ((row + 1) / total_rows * 100) / 2
         self.progress["value"] = percentage_completion
         self.progress.update_idletasks()

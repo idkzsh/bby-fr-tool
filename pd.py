@@ -1,48 +1,9 @@
 import pandas as pd
 import translators as ts
 import re
-import time
 
 
 # _ = ts.preaccelerate_and_speedtest()
-def main():
-    # input_file = "french_data_test.xlsx"
-
-    # # Load the Excel file into a DataFrame
-    # df = pd.read_excel(input_file)
-
-    # # start the timer
-    # start_time = time.time()
-
-    # # Apply the translation function to each row in the DataFrame
-    # df["SKU_DESC FRENCH"] = df.apply(
-    #     translate_to_french,
-    #     column_name_fr="SKU_DESC FRENCH",
-    #     column_name="SKU_DESC",
-    #     chars=40,
-    #     axis=1,
-    # )
-    # df["SHORT_DESC FRENCH"] = df.apply(
-    #     translate_to_french,
-    #     column_name_fr="SHORT_DESC FRENCH",
-    #     column_name="SHORT_DESC",
-    #     chars=20,
-    #     axis=1,
-    # )
-    # # end the timer
-    # end_time = time.time()
-
-    # elapsed_time = end_time - start_time
-
-    # # Save the DataFrame with translations to a new Excel file
-    # output_file = "translated_data.xlsx"
-    # df.to_excel(output_file, index=False)
-
-    # print(f"Data with translations saved to {output_file}")
-    # print(f"Execution time: {elapsed_time:.2f} seconds")
-    pass
-
-
 class BBYTranslator:
     def __init__(self, callback_function, row_callback):
         self.callback_function = callback_function
@@ -56,9 +17,9 @@ class BBYTranslator:
         file_path_index = input_file.rfind("/")
         directory_path = input_file[:file_path_index]
         print(directory_path)
-        
+
         output_file = directory_path + r"\translated_data.xlsx"
-        
+
         if mode == 1:
             df["SKU_DESC FRENCH"] = df.apply(
                 self.translate_sku,
@@ -146,7 +107,7 @@ class BBYTranslator:
             tree_result = [row["SKU"], desc, desc_fr]
 
             # # desc_fr = re.sub(r'\s+', ' ', desc_fr).strip()
-            self.count +=1
+            self.count += 1
             self.callback_function(tree_result)
             self.callback_row(self.count, self.total_rows)
             return desc_fr
@@ -198,7 +159,6 @@ class BBYTranslator:
             # Use re.sub to replace the pattern with an empty string
             desc_fr = re.sub(pattern, "", desc_fr)
 
-
             if len(desc_fr) > chars - len(brand):
                 while len(desc_fr) > chars - len(brand):
                     modified = False
@@ -210,12 +170,12 @@ class BBYTranslator:
 
             desc_fr = brand + desc_fr
             tree_result = [row["SKU"], desc, desc_fr]
-            self.count +=1
+            self.count += 1
             self.callback_function(tree_result)
             self.callback_row(self.count, self.total_rows)
             return desc_fr
 
-    def remove_chars(self,desc):
+    def remove_chars(self, desc):
         # Define the set of vowels to remove
         chars_to_remove = "AEIOUÀÂÉÈÊËÎÏÔÛÙÜ "
 
@@ -227,7 +187,3 @@ class BBYTranslator:
                 modified = True
 
         return desc, modified
-
-
-if __name__ == "__main__":
-    main()
