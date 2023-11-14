@@ -143,7 +143,7 @@ class BBYTranslator:
             return desc_fr
 
     def translate_word(self, row, column_name_fr, column_name, chars):
-        """Translate word method takes the entire SKU and translates it word by word, 
+        """Translate word method takes the entire SKU and translates it word by word,
         this is better at translating each word but can lose the context and also the translation is usually too long
 
         Args:
@@ -215,6 +215,18 @@ class BBYTranslator:
             self.callback_function(tree_result)
             self.callback_row(self.count, self.total_rows)
             return desc_fr
+
+    def read_and_shorten(self, chars, input_file, col_name, col_name_short):
+        """
+        This method was created after, it is triggered when the user presses the shorten button.
+        It will read the file, load it into a dataframe. Call the remove_chars function to shorten,
+        then it will update the excel file, and update the treeview using the callback function
+        """
+        shorten_df = pd.read_excel(input_file)
+        self.total_rows = len(shorten_df)
+        file_path_index = input_file.rfind("/")
+        directory_path = input_file[:file_path_index]
+        output_file = directory_path + r"\translated_data.xlsx"
 
     def remove_chars(self, desc):
         """Remove chars method removes vowels and spaces from the translation. It goes from right to left.
