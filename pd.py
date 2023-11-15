@@ -38,7 +38,7 @@ class BBYTranslator:
         self.total_rows = len(df)
         file_path_index = input_file.rfind("/")
         directory_path = input_file[:file_path_index]
-        output_file = directory_path + r"\translated_data.xlsx"
+        output_file = directory_path + "translated_data.xlsx"
 
         if mode == 1:
             df["SKU_DESC FRENCH"] = df.apply(

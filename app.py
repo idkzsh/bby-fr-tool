@@ -23,8 +23,8 @@ class TranslatorApp:
         """
         self.root = tkb.Window(themename="darkly")
         self.root.bind("<Escape>", self.quit)
-        self.root.iconbitmap(r"bby.ico")
-        self.root.iconbitmap(default=r"bby.ico")
+        self.root.iconbitmap("bby.ico")
+        self.root.iconbitmap("bby.ico")
         self.filename_var = ctk.StringVar()
         self.char_limit_entry = tkb.StringVar()
         self.radio_var = tk.IntVar(value=0)
@@ -40,6 +40,7 @@ class TranslatorApp:
         Args:
             event (tkinter.Event): When Escape Key is pressed
         """
+        print(event)    
         sys.exit()
 
     def create_layout(self):
