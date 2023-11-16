@@ -226,7 +226,8 @@ class BBYTranslator:
         self.total_rows = len(shorten_df)
         file_path_index = input_file.rfind("/")
         directory_path = input_file[:file_path_index]
-        output_file = directory_path + r"\translated_data.xlsx"
+        output_file = directory_path + r"\\shortened_data.xlsx"
+
 
     def remove_chars(self, desc):
         """Remove chars method removes vowels and spaces from the translation. It goes from right to left.
