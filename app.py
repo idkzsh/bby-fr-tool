@@ -1,9 +1,7 @@
-import customtkinter as ctk
+from customtkinter import CTkFrame
 import pd
 import sys
-import tkinter as tk
 import ttkbootstrap as tkb
-from tkinter import ttk
 from tkinter import filedialog
 from ttkbootstrap.constants import *
 
@@ -23,11 +21,11 @@ class TranslatorApp:
         """
         self.root = tkb.Window(themename="darkly")
         self.root.bind("<Escape>", self.quit)
-        self.root.iconbitmap("bby.ico")
-        self.root.iconbitmap("bby.ico")
-        self.filename_var = ctk.StringVar()
+        self.root.iconbitmap(r"bby.ico")
+        self.root.iconbitmap(r"bby.ico")
+        self.filename_var = tkb.StringVar()
         self.char_limit_entry = tkb.StringVar()
-        self.radio_var = tk.IntVar(value=0)
+        self.radio_var = tkb.IntVar(value=0)
         self.char_limit = tkb.IntVar()
         self.total_rows = 0
         self.completion = 0
@@ -51,7 +49,7 @@ class TranslatorApp:
         self.root.geometry("1000x600")
         self.root.resizable(False, False)
 
-        frame = ctk.CTkFrame(self.root)
+        frame = CTkFrame(self.root)
         frame.place(x=0, y=0, relwidth=1, relheight=1)
 
         dark_frame = tkb.Frame(frame)
@@ -160,7 +158,7 @@ class TranslatorApp:
         self.table.place(relx=0.225, rely=0.01, relwidth=0.768, relheight=0.98)
 
     def update_entry(self, *args):
-        self.short_char_entry.delete(0, tk.END)  # Clear the entry
+        self.short_char_entry.delete(0, tkb.END)  # Clear the entry
         self.short_char_entry.insert(0, str(self.char_limit.get()))
 
     def browse_file(self):
@@ -192,7 +190,7 @@ class TranslatorApp:
                     self.filename_var.get(), self.radio_var.get()
                 )
                 self.file_saved_entry.configure(state="normal")
-                self.file_saved_entry.delete(0, tk.END)
+                self.file_saved_entry.delete(0, tkb.END)
                 self.file_saved_entry.insert(0, f"{directory}")
             except:
                 mb = tkb.dialogs.Messagebox.ok("Please choose a file")
