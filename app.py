@@ -24,6 +24,7 @@ class TranslatorApp:
         self.root.iconbitmap(r"bby.ico")
         self.root.iconbitmap(r"bby.ico")
         self.filename_var = tkb.StringVar()
+        self.short_filename_var = tkb.StringVar()
         self.char_limit_entry = tkb.StringVar()
         self.radio_var = tkb.IntVar(value=0)
         self.char_limit = tkb.IntVar()
@@ -116,7 +117,7 @@ class TranslatorApp:
         )
         short_label.place(relx=0.055, rely=0.01)
 
-        short_filename = tkb.Entry(shortener_label_frame)
+        short_filename = tkb.Entry(shortener_label_frame, textvariable=self.short_filename_var)
         short_filename.place(relx=0.05, rely=0.2, relwidth=0.9)
 
         short_char_label = tkb.Label(
@@ -199,11 +200,17 @@ class TranslatorApp:
     def shorten(self):
         if not (0 <= int(self.char_limit_entry.get()) <= 255):
             mb = tkb.dialogs.Messagebox.ok("Enter a value between 0 and 255")
+
         else:
-            translator = pd.BBYTranslator(
-                callback_function=self.update_treeview,
-                row_callback=self.update_total_rows,
-            )
+            try:
+                translator = pd.BBYTranslator(
+                    callback_function=self.update_treeview,
+                    row_callback=self.update_total_rows,
+                )
+
+                translator.read_file(self.short_filename_var.get(),3)
+            except:
+                mb = tkb.dialogs.Messagebox.ok("Please choose a file")
 
     def update_treeview(self, data_to_print):
         """Callback method for the BBYTranslator Class to update the treeview after each iteration

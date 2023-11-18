@@ -55,7 +55,7 @@ class BBYTranslator:
                 chars=20,
                 axis=1,
             )
-        else:
+        elif mode == 2:
             df["SKU_DESC FRENCH"] = df.apply(
                 self.translate_word,
                 column_name_fr="SKU_DESC FRENCH",
@@ -69,6 +69,14 @@ class BBYTranslator:
                 column_name="SHORT_DESC",
                 chars=20,
                 axis=1,
+            )
+        elif mode == 3:
+            df["OUTPUT"] = df.apply(
+                self.shorten,
+                axis=1,
+                chars=40,
+                col_name = "SKU_DESC",
+                col_name_short = "OUTPUT"
             )
 
         df.to_excel(output_file, index=False)
@@ -216,18 +224,36 @@ class BBYTranslator:
             self.callback_row(self.count, self.total_rows)
             return desc_fr
 
-    def read_and_shorten(self, chars, input_file, col_name, col_name_short):
+    def shorten(self, row, chars, col_name, col_name_short):
         """
         This method was created after, it is triggered when the user presses the shorten button.
         It will read the file, load it into a dataframe. Call the remove_chars function to shorten,
         then it will update the excel file, and update the treeview using the callback function
         """
-        shorten_df = pd.read_excel(input_file)
-        self.total_rows = len(shorten_df)
-        file_path_index = input_file.rfind("/")
-        directory_path = input_file[:file_path_index]
-        output_file = directory_path + r"\\shortened_data.xlsx"
 
+        if pd.isnull(row[col_name_short]):
+            
+            desc = row[col_name]
+
+            words = desc.split()
+
+            brand = words[0] + " "
+            words = words[1:]
+
+            desc_short = " ".join(words)
+        
+        
+
+        while len(desc_short) > chars - len(brand):
+            modified = False
+            print(desc_short, len(desc_short))
+            desc_short, modified = self.remove_chars(desc_short)
+
+            if not modified:
+                break
+        
+        return brand + desc_short
+        
 
     def remove_chars(self, desc):
         """Remove chars method removes vowels and spaces from the translation. It goes from right to left.
