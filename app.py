@@ -129,14 +129,16 @@ class TranslatorApp:
         short_browse_button.place(relx=0.8, rely=0.2, relwidth=0.15)
 
         short_char_label = tkb.Label(
-            master=shortener_label_frame, text="Character Limit", bootstyle="DEFAULT"
+            master=shortener_label_frame, text="Chars", bootstyle="DEFAULT"
         )
-        short_char_label.place(relx=0.055, rely=0.5)
+        short_char_label.place(relx=0.05, rely=0.5)
 
         short_scale = tkb.Scale(
             shortener_label_frame, from_=0, to=255, variable=self.char_limit
         )
-        short_scale.place(relx=0.5, rely=0.525, relwidth=0.44)
+        short_scale.place(relx=0.25, rely=0.525, relwidth=0.7)
+
+
 
         self.short_char_entry = tkb.Entry(
             shortener_label_frame, textvariable=self.char_limit_entry
