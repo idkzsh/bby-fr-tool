@@ -68,7 +68,7 @@ class TranslatorApp:
         browse_button = tkb.Button(
             label_frame,
             text="Browse",
-            command=self.browse_file,
+            command=lambda: self.browse_file("translation"),
             bootstyle="LIGHT",
         )
         browse_button.place(relx=0.5, rely=0.25, relwidth=0.44)
@@ -118,7 +118,15 @@ class TranslatorApp:
         short_label.place(relx=0.055, rely=0.01)
 
         short_filename = tkb.Entry(shortener_label_frame, textvariable=self.short_filename_var)
-        short_filename.place(relx=0.05, rely=0.2, relwidth=0.9)
+        short_filename.place(relx=0.05, rely=0.2, relwidth=0.7)
+
+        short_browse_button = tkb.Button(
+            shortener_label_frame,
+            text="...",
+            command= lambda: self.browse_file("shorten"),
+            bootstyle="LIGHT",
+        )
+        short_browse_button.place(relx=0.8, rely=0.2, relwidth=0.15)
 
         short_char_label = tkb.Label(
             master=shortener_label_frame, text="Character Limit", bootstyle="DEFAULT"
@@ -162,14 +170,17 @@ class TranslatorApp:
         self.short_char_entry.delete(0, tkb.END)  # Clear the entry
         self.short_char_entry.insert(0, str(self.char_limit.get()))
 
-    def browse_file(self):
+    def browse_file(self, id):
         """
         Browse file method is triggered when the browse button is pressed and updates the class variable filename_var
         """
         file_path = filedialog.askopenfilename()
         if file_path:
-            self.filename_var.set(file_path)
-            print("Selected file:", file_path)
+            if id == "translation":
+                self.filename_var.set(file_path)
+                print("Selected file:", file_path)
+            elif id == "shorten":
+                self.short_filename_var.set(file_path)
 
     def run(self):
         """
